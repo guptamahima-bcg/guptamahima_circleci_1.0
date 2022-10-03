@@ -59,7 +59,7 @@ jobs:
 
   docker_artifacts:
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: circleci/python@3.9.13
     steps:
       - checkout
       - setup_remote_docker
@@ -89,9 +89,12 @@ jobs:
 
 
 workflows:
-  workflow1:
+  circle-ci:
     jobs:
       - build
+      - docker_artifacts:
+          requires:
+              - approval
       - test_billing_system_1:
           requires:
               - build
@@ -103,9 +106,6 @@ workflows:
           requires:
               - test_billing_system_1
               - test_billing_system_2
-      - docker_artifacts:
-          requires:
-              - approval
     triggers:
       - schedule:
           cron: "0 17 * * *"
