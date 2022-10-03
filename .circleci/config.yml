@@ -103,7 +103,7 @@ workflows:
           requires:
               - test_billing_system_1
               - test_billing_system_2
-      - docker_artifacts
+      - docker_artifacts:
           requires:
               - approval
 
