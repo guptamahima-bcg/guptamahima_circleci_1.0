@@ -106,8 +106,6 @@ workflows:
       - docker_artifacts:
           requires:
               - approval
-
-  workflow2:
     triggers:
       - schedule:
           cron: "0 17 * * *"
