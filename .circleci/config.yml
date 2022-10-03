@@ -1,0 +1,117 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: circleci/python@3.9.13
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - restore_cache:
+          keys:
+            - cache-v1-{{ checksum "requirements.txt"}}
+      - run:
+          name : install dependencies 
+          command : |
+            python3 -m pip install --upgrade pip
+            pip install -r requirements.txt
+      - run:
+          name : run application
+          command : python billing_system.py
+      - save_cache :
+          key: cache-v1-{{ checksum "requirements.txt"}}
+          paths:
+            - "/usr/local/bin"
+
+  test_billing_system_1:
+    docker:
+      - image: circleci/python@3.9.13
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - restore_cache:
+          keys:
+            - cache-v1-{{ checksum "requirements.txt"}}
+      - run:
+          name : Running test case 1
+          command : python test_billing_system_1.py
+      - save_cache :
+          key: cache-v1-{{ checksum "requirements.txt"}}
+          paths:
+            - "/usr/local/bin"
+
+  test_billing_system_2:
+    docker:
+      - image: circleci/python@3.9.13
+    steps:
+      - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - restore_cache:
+          keys:
+            - cache-v1-{{ checksum "requirements.txt"}}
+      - run:
+          name : Running test case 2
+          command : python test_billing_system_2.py
+      - save_cache :
+          key: cache-v1-{{ checksum "requirements.txt"}}
+          paths:
+            - "/usr/local/bin"
+
+  docker_artifacts:
+    docker:
+      - image: docker:17.05.0-ce-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - restore_cache:
+          keys:
+            - cache-v1-{{ checksum "requirements.txt"}}
+      - run:
+          name : Install dependencies
+          command : |
+            apk add --no-cache py-pip=9.0.0-r1
+            pip install docker-compose==1.12.0
+      - run: docker build . -t mahima_circleci
+      - run: docker image ls
+      - run:
+          name: Save docker image 
+          command: |
+            mkdir -p /image_folder
+            docker save -o /image_folder/mahima_circleci.tar mahima_circleci
+      - store_artifacts:
+          path: /image_folder
+          destination: artifact-file
+      - save_cache:
+          key: cache-v1-{{ checksum "requirements.txt"}}
+          paths:
+            - "/usr/local/bin"
+
+
+workflows:
+  workflow1:
+    jobs:
+      - build
+      - test_billing_system_1:
+          requires:
+              - build
+      - test_billing_system_2:
+          requires:
+              - build
+      - approval:
+          type: approval
+          requires:
+              - test_billing_system_1
+              - test_billing_system_2
+      - docker_artifacts
+          requires:
+              - approval
+
+  workflow2:
+    triggers:
+      - schedule:
+          cron: "0 17 * * *"
+          filters:
+            branches:
+              only:
+                - main

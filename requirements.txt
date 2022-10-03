@@ -1,0 +1,5 @@
+version_parser>=0.1.1
+gitpython>=2.1.13
+pygithub>=1.43.8
+PyYAML==5.3
+zipp==3.6.0
