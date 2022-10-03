@@ -92,9 +92,10 @@ workflows:
   circle-ci:
     jobs:
       - build
-      - docker_artifacts:
-          requires:
-              - approval
+      - docker_artifacts
+      # - docker_artifacts:
+          # requires:
+          #     - approval
       - test_billing_system_1:
           requires:
               - build
