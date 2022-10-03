@@ -2,6 +2,7 @@ version: 2.1
 
 jobs:
   build:
+    working_directory: ~/circleci-project-setup
     docker:
       - image: circleci/python@3.9.13
     steps:
@@ -24,6 +25,7 @@ jobs:
             - "/usr/local/bin"
 
   test_billing_system_1:
+    working_directory: ~/circleci-project-setup
     docker:
       - image: circleci/python@3.9.13
     steps:
@@ -58,6 +60,7 @@ jobs:
             - "/usr/local/bin"
 
   docker_artifacts:
+    working_directory: ~/circleci-project-setup
     docker:
       - image: circleci/python@3.9.13
     steps:
@@ -92,10 +95,9 @@ workflows:
   circle-ci:
     jobs:
       - build
-      - docker_artifacts
-      # - docker_artifacts:
-          # requires:
-          #     - approval
+      - docker_artifacts:
+          requires:
+              - approval
       - test_billing_system_1:
           requires:
               - build
