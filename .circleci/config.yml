@@ -74,7 +74,7 @@ jobs:
           name : Install dependencies
           command : |
             apk --update --upgrade add docker docker-compose
-      - run: docker build . -t mahima_circleci
+      - run: docker build -t mahima_circleci .
       - run: docker image ls
       - run:
           name: Save docker image 
