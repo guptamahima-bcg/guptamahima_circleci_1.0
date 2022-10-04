@@ -7,7 +7,7 @@ jobs:
       - image: python:3.8.10-alpine3.13
     steps:
       - checkout
-      - run: sudo chown -R circleci:circleci /usr/local/bin
+      #- run: sudo chown -R circleci:circleci /usr/local/bin
       - restore_cache:
           keys:
             - cache-v1-{{ checksum "requirements.txt"}}
@@ -30,7 +30,7 @@ jobs:
       - image: python:3.8.10-alpine3.13
     steps:
       - checkout
-      - run: sudo chown -R circleci:circleci /usr/local/bin
+      #- run: sudo chown -R circleci:circleci /usr/local/bin
       - restore_cache:
           keys:
             - cache-v1-{{ checksum "requirements.txt"}}
@@ -47,7 +47,7 @@ jobs:
       - image: circleci/python@3.9.13
     steps:
       - checkout
-      - run: sudo chown -R circleci:circleci /usr/local/bin
+      #- run: sudo chown -R circleci:circleci /usr/local/bin
       - restore_cache:
           keys:
             - cache-v1-{{ checksum "requirements.txt"}}
@@ -66,7 +66,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run: sudo chown -R circleci:circleci /usr/local/bin
+      #- run: sudo chown -R circleci:circleci /usr/local/bin
       - restore_cache:
           keys:
             - cache-v1-{{ checksum "requirements.txt"}}
