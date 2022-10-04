@@ -67,10 +67,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      #- run: sudo chown -R circleci:circleci /usr/local/bin
-      # - restore_cache:
-      #     keys:
-      #       - cache-v1-{{ checksum "requirements.txt"}}
+      - restore_cache:
+          keys:
+            - cache-v1-{{ checksum "requirements.txt"}}
       - run:
           name : Install dependencies
           command : |
