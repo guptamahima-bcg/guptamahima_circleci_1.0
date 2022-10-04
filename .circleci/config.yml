@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/circleci-project-setup
     docker:
-      - image: circleci/python@3.9.13
+      - image: python:3.8.10-alpine3.13
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
@@ -27,7 +27,7 @@ jobs:
   test_billing_system_1:
     working_directory: ~/circleci-project-setup
     docker:
-      - image: circleci/python@3.9.13
+      - image: python:3.8.10-alpine3.13
     steps:
       - checkout
       - run: sudo chown -R circleci:circleci /usr/local/bin
@@ -62,7 +62,7 @@ jobs:
   docker_artifacts:
     working_directory: ~/circleci-project-setup
     docker:
-      - image: circleci/python@3.9.13
+      - image: python:3.8.10-alpine3.13
     steps:
       - checkout
       - setup_remote_docker
