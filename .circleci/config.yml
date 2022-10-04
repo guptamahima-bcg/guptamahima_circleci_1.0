@@ -63,7 +63,7 @@ jobs:
   docker_artifacts:
     working_directory: ~/circleci-project-setup
     docker:
-      - image: python:3.8.10-alpine3.13
+      - image: docker:17.05.0-ce-git
     steps:
       - checkout
       - setup_remote_docker
