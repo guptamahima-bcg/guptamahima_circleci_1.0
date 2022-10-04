@@ -94,7 +94,11 @@ jobs:
 workflows:
   circle-ci:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only:
+                - main
       - docker_artifacts:
           requires:
               - approval
@@ -112,7 +116,3 @@ workflows:
     triggers:
       - schedule:
           cron: "0 17 * * *"
-          filters:
-            branches:
-              only:
-                - main
