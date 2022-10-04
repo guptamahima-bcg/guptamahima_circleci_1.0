@@ -93,6 +93,9 @@ jobs:
 
 workflows:
   circle-ci:
+    triggers:
+      - schedule:
+          cron: "0 17 * * *"
     jobs:
       - build:
           filters:
@@ -113,6 +116,3 @@ workflows:
           requires:
               - test_billing_system_1
               - test_billing_system_2
-    triggers:
-      - schedule:
-          cron: "0 17 * * *"
