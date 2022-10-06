@@ -3,7 +3,8 @@ FROM python:3
 WORKDIR /app
 
 COPY requirements.txt requirements.txt
-RUN apk add --no-cache gcc
+RUN apt-get update
+RUN apt-get -y install gcc
 RUN python3 -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
