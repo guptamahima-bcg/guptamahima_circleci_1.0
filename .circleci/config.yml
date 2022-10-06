@@ -61,74 +61,33 @@ jobs:
             - "/usr/local/bin"
 
   docker_artifacts:
-    working_directory: ~/circleci-project-setup
+    # working_directory: ~/circleci-project-setup
     docker:
-      - image: docker:17.05.0-ce-git
+      - image: python:3.8.10-alpine3.13
     steps:
       - checkout
       - setup_remote_docker
       - restore_cache:
           keys:
-            - v1-{{ .Branch }}
-          paths:
-            - /caches/circleci-project-setup.tar
+            - cache-v1-{{ checksum "requirements.txt"}}
       - run:
           name : Install dependencies
           command : |
-            apk add --no-cache py-pip=9.0.0-r1 gcc
-            pip install docker-compose==1.12.0 awscli==1.11.76
+            apk --update --upgrade add docker docker-compose
+      - run: docker build -t mahima_circleci -f Dockerfile.txt .
+      - run: docker image ls
       - run:
-          name: Load Docker image layer cache
+          name: Save docker image 
           command: |
-            set +o pipefail
-            docker load -i /caches/circleci-project-setup.tar | true
-      - run:
-          name: Build application Docker image
-          command: |
-            docker build --cache-from=circleci-project-setup -t circleci-project-setup .
-      - run:
-          name: Save Docker image layer cache
-          command: |
-            mkdir -p /caches
-            docker save -o /caches/circleci-project-setup.tar circleci-project-setup
-      - save_cache:
-          key: v1-{{ .Branch }}-{{ epoch }}
-          paths:
-            - /caches/circleci-project-setup.tar
-
-      - run:
-          name: Run tests
-          command: |
-            docker-compose -f ./docker-compose.test.yml up
-
-
-      - deploy:
-          name: Push application Docker image
-          command: |
-            if [ "$ {CIRCLE_BRANCH}" == "master" ]; then
-              login="$(aws ecr get-login)"
-              ${login}
-              docker tag circleci-project-setup "${ECR_ENDPOINT}/circleci-project-setup:${CIRCLE_SHA1}"
-              docker push "${ECR_ENDPOINT}/circleci-project-setup:${CIRCLE_SHA1}"
-            fi
-
-      # - restore_cache:
-      #     keys:
-      #       - cache-v1-{{ checksum "requirements.txt"}}
-      # - run: docker build -t mahima_circleci -f Dockerfile.txt .
-      # - run: docker image ls
-      # - run:
-      #     name: Save docker image 
-      #     command: |
-      #       mkdir -p /image_folder
-      #       docker save -o /image_folder/mahima_circleci.tar mahima_circleci
-      # - store_artifacts:
-      #     path: /image_folder
-      #     destination: artifact-file
-      # # - save_cache:
-      # #     key: cache-v1-{{ checksum "requirements.txt"}}
-      # #     paths:
-      # #       - "/usr/local/bin"
+            mkdir -p /image_folder
+            docker save -o /image_folder/mahima_circleci.tar mahima_circleci
+      - store_artifacts:
+          path: /image_folder
+          destination: artifact-file
+      # - save_cache:
+      #     key: cache-v1-{{ checksum "requirements.txt"}}
+      #     paths:
+      #       - "/usr/local/bin"
 
 
 workflows:
