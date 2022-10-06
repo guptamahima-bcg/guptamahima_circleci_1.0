@@ -1,1 +1,5 @@
-# guptamahima_circleci_1.0
+# Retail Store Management Software
+
+This will be used by retail stores for managing their customers
+
+Thank you :)
