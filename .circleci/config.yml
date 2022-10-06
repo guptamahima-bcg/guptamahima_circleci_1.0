@@ -7,7 +7,6 @@ jobs:
       - image: python:3.8.10-alpine3.13
     steps:
       - checkout
-      #- run: sudo chown -R circleci:circleci /usr/local/bin
       - restore_cache:
           keys:
             - cache-v1-{{ checksum "requirements.txt"}}
@@ -31,7 +30,6 @@ jobs:
       - image: python:3.8.10-alpine3.13
     steps:
       - checkout
-      #- run: sudo chown -R circleci:circleci /usr/local/bin
       - restore_cache:
           keys:
             - cache-v1-{{ checksum "requirements.txt"}}
@@ -48,7 +46,6 @@ jobs:
       - image: python:3.8.10-alpine3.13
     steps:
       - checkout
-      #- run: sudo chown -R circleci:circleci /usr/local/bin
       - restore_cache:
           keys:
             - cache-v1-{{ checksum "requirements.txt"}}
@@ -61,7 +58,6 @@ jobs:
             - "/usr/local/bin"
 
   docker_artifacts:
-    # working_directory: ~/circleci-project-setup
     docker:
       - image: python:3.8.10-alpine3.13
     steps:
@@ -84,21 +80,10 @@ jobs:
       - store_artifacts:
           path: /image_folder
           destination: artifact-file
-      # - save_cache:
-      #     key: cache-v1-{{ checksum "requirements.txt"}}
-      #     paths:
-      #       - "/usr/local/bin"
 
 
 workflows:
   circle-ci:
-    # triggers:
-    #   - schedule:
-    #       cron: "0 17 * * *"
-    #       filters:
-    #        branches:
-    #          only:
-    #            - main
     jobs:
       - build:
           filters:
@@ -119,3 +104,13 @@ workflows:
           requires:
               - test_billing_system_1
               - test_billing_system_2
+
+  schedule-job:
+    jobs:
+      triggers:
+      - schedule:
+          cron: "0 17 * * *"
+          filters:
+           branches:
+             only:
+               - main
