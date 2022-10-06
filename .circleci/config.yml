@@ -113,3 +113,25 @@ workflows:
          branches:
            only:
              - main
+
+    jobs:
+      - build:
+          filters:
+            branches:
+              only:
+                - main
+      - docker_artifacts:
+          requires:
+              - approval
+      - test_billing_system_1:
+          requires:
+              - build
+      - test_billing_system_2:
+          requires:
+              - build
+      - approval:
+          type: approval
+          requires:
+              - test_billing_system_1
+              - test_billing_system_2
+
